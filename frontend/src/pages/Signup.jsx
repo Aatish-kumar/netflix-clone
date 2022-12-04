@@ -3,10 +3,11 @@ import styled from 'styled-components';
 import Background from '../components/Background';
 import Header from '../components/Header';
 import { useNavigate } from 'react-router-dom';
+import { IoIosArrowForward } from 'react-icons/io';
 const Signup = () => {
     
     const navigate = useNavigate();
-    const [email, setEmail] = useState("")
+    const[ email, setEmail] = useState("");
     const toSignmainPage = (email) => {
         navigate("/signupmain", {state:{email: email}})
     }
@@ -46,7 +47,7 @@ const Signup = () => {
                     />
                     <button onClick={() => {
                         toSignmainPage(email);
-                    }}>Get Started</button>
+                    }}>Get Started <IoIosArrowForward className="arrow-forward"/></button>
                 </div>
             </div>
         </div>
@@ -76,15 +77,25 @@ const Container = styled.div`
                         font-size: 1.8rem;
                         h1 {
                             padding: 0 25rem; 
+                            font-weight: 700;
+                        }
+                        h4 {
+                            font-weight: 500;
+                            padding-bottom: 1.5rem;
+                        }
+                        h6 {
+                            font-weight: 500;
+                            padding-bottom: .7rem;
                         }
                     }
                     .form {
+                        text-align: center;
                         input {
                             color: black;
                             border: none;
                             padding: 1.5rem;
                             font-size: 1.3rem;
-                            
+                            width: 40vw;
                         }
                         button {
                             border: none;
@@ -92,8 +103,11 @@ const Container = styled.div`
                             padding: 1.5rem;
                             font-size: 1.3rem;
                             color: white;
-                            background-color: #e50914;
                             
+                            background-color: #e50914;
+                            .arrow-forward {
+                                
+                            }
                         }
                     }
                 }

@@ -1,7 +1,35 @@
 import styled from "styled-components"
 import Background from "../components/Background"
 import logo from '../assets/logo.png'
+import { useNavigate } from "react-router-dom"
+import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth"
+import { firebaseAuth } from "../config/firebase-config"
+import { useState } from "react"
 const Login = () => {
+    const navigate = useNavigate();
+
+    const [formValues, setFormValues] = useState({
+            email: "",
+            password: "",
+        });
+
+    const handleSignIn = async () => {
+        
+        try {
+            const { email, password } = formValues;
+            await signInWithEmailAndPassword(firebaseAuth,email,password);
+        } catch(err) {
+            console.log(err);
+        }
+    }
+
+    
+
+    onAuthStateChanged(firebaseAuth, (currentUser) => {
+        if(currentUser) navigate("/");
+    });
+
+
   return (
     <Container>
         <Background />
@@ -16,9 +44,9 @@ const Login = () => {
                     <div className="login-form flex column">
                         <h1>Sign In</h1>
                         <form className="flex column">
-                            <input type="email" placeholder="Email" isRequired/>
-                            <input type="password" placeholder="Password"/>
-                            <button>Sign In</button>
+                            <input type="email" name="email" placeholder="Email" value={formValues.email} onChange={(e) => setFormValues({...formValues,[e.target.name]: e.target.value,})} required/>
+                            <input type="password" name="password" value={formValues.password} onChange={(e) => setFormValues({...formValues,[e.target.name]: e.target.value,})} placeholder="Password" required/>
+                            <button onClick={handleSignIn}>Sign In</button>
                             <h5>Need help?</h5>
                         </form>
                             

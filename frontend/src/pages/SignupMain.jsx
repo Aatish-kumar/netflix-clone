@@ -1,7 +1,32 @@
-import { useLocation } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components"
 import Header from "../components/Header"
+import { firebaseAuth } from "../config/firebase-config"
+import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth"
 const SignupMain = () => {
+
+  const navigate = useNavigate();
+  const [formValues, setFormValues] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleSignUp = async () => {
+      console.log(formValues);
+      try {
+        const { email, password } = formValues;
+        await createUserWithEmailAndPassword(firebaseAuth,email,password);
+      } catch(err) {
+      console.log(err);
+      }
+  }
+
+ 
+
+  onAuthStateChanged(firebaseAuth, (currentUser) => {
+       if(currentUser) navigate("/");
+  });
 
   const location = useLocation();
   return (
@@ -15,9 +40,9 @@ const SignupMain = () => {
           <h4>We hate paperwork, too.</h4>
         </div>
         <div className="form-up flex column">
-          <input type="email" value={location.state.email} required/>      
-          <input type="password" required placeholder="Add a password"/>
-          <button>Next</button>
+          <input type="email" name="email" placeholder="Enter Your Email Address" value={formValues.email} onChange={(e) => setFormValues({...formValues,[e.target.name]: e.target.value,})} required/>      
+          <input type="password" required name="password" value={formValues.password} onChange={(e) => setFormValues({...formValues,[e.target.name]: e.target.value,})} placeholder="Add a password"/>
+          <button onClick={handleSignUp}>Next</button>
         </div>
       </div>
       
@@ -56,6 +81,10 @@ const Container = styled.div`
           font-size: 1.5rem;
           background-color: #e50914;
           color: white;
+          cursor: pointer;
+          :hover {
+            background-color: #f6121d;
+          }
         }
       }
     }
